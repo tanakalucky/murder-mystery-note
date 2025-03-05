@@ -1,0 +1,37 @@
+name: Deploy action
+description: Deploy to Cloudflare pages
+
+inputs:
+  cloudflare-api-token:
+    required: true
+
+  cloudflare-account-id:
+    required: true
+
+  branch-name:
+    description: 'Branch name for deployment'
+    required: false
+    default: 'main'
+
+runs:
+  using: "composite"
+  steps:
+    - name: Setup Bun
+      uses: oven-sh/setup-bun@v1
+      with:
+        bun-version: latest
+
+    - name: Install dependencies
+      run: bun install
+      shell: bash
+
+    - name: Build
+      run: bun run build
+      shell: bash
+
+    - name: Deploy
+      uses: cloudflare/wrangler-action@v3
+      with:
+        apiToken: ${{ inputs.cloudflare-api-token }}
+        accountId: ${{ inputs.cloudflare-account-id }}
+        command: pages deploy --branch ${{ inputs.branch-name }}
