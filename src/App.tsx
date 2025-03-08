@@ -6,13 +6,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Note, useNotesStore } from '@/store/note-store';
 import { Calendar, Clock, MapPin, Send, Tag, Trash2 } from 'lucide-react';
 import React, { useState, useRef } from 'react';
-
-// キャラクターの型定義
-interface Character {
-  id: number;
-  name: string;
-  color: string;
-}
+import { useCharacterStore } from './store/character-store';
 
 // 場所の型定義
 interface Place {
@@ -32,7 +26,7 @@ interface Tag {
 const DragDropMysteryApp = () => {
   // 状態管理
   const { notes, addNote, deleteNote, addTagToNote, removeTagFromNote, setNotes } = useNotesStore();
-  const [characters, setCharacters] = useState<Character[]>([]);
+  const { characters, setCharacters, getCharacterColor } = useCharacterStore();
   const [places, setPlaces] = useState<Place[]>([]);
   const [quickTimes, setQuickTimes] = useState<string[]>([]);
   const [quickDates, setQuickDates] = useState<string[]>([]);
@@ -139,12 +133,6 @@ const DragDropMysteryApp = () => {
       e.preventDefault();
       handleAddNote();
     }
-  };
-
-  // キャラクター名から色を取得するヘルパー関数
-  const getCharacterColor = (charName: string) => {
-    const character = characters.find((char) => char.name === charName);
-    return character ? character.color : '#000000';
   };
 
   // 場所名から色を取得するヘルパー関数
