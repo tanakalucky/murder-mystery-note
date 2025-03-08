@@ -1,11 +1,12 @@
-import { Clock, Tag } from 'lucide-react';
+import { Clock, FileText, Tag } from 'lucide-react';
 import { useState } from 'react';
 import { Memo } from './feature/memo/Memo';
+import { PdfManager } from './feature/pdf-manager/PdfManager';
 import { TagManager } from './feature/tag-manager/TagManager';
 import { Timeline } from './feature/timeline/Timeline';
 
 const DragDropMysteryApp = () => {
-  const [rightPanelMode, setRightPanelMode] = useState<'tags' | 'timeline'>('tags');
+  const [rightPanelMode, setRightPanelMode] = useState<'tags' | 'timeline' | 'pdf'>('tags');
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -33,10 +34,19 @@ const DragDropMysteryApp = () => {
               <Clock className="mr-1 h-4 w-4" />
               タイムライン
             </button>
+            <button
+              className={`flex-1 py-2 px-3 flex items-center justify-center text-sm ${rightPanelMode === 'pdf' ? 'bg-white font-medium' : 'hover:bg-gray-50'}`}
+              onClick={() => setRightPanelMode('pdf')}
+            >
+              <FileText className="mr-1 h-4 w-4" />
+              PDF
+            </button>
           </div>
         </div>
 
-        {rightPanelMode === 'tags' ? <TagManager /> : <Timeline />}
+        {rightPanelMode === 'tags' && <TagManager />}
+        {rightPanelMode === 'timeline' && <Timeline />}
+        {rightPanelMode === 'pdf' && <PdfManager />}
       </div>
     </div>
   );

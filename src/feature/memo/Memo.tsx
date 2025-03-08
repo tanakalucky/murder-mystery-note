@@ -186,7 +186,14 @@ export const Memo = () => {
           onDrop={(e) => {
             e.preventDefault();
             e.currentTarget.classList.remove('border-primary');
-            // 新規メモ入力欄へのドロップ処理（今回は実装しない）
+
+            // PDFからのテキストドロップを処理
+            const text = e.dataTransfer.getData('text/plain');
+            const source = e.dataTransfer.getData('source');
+
+            if (text && source === 'pdf') {
+              setNewNote((prevNote) => (prevNote ? `${prevNote}\n\n${text}` : text));
+            }
           }}
         >
           <Textarea
