@@ -1,9 +1,10 @@
+import { TagType } from '@/feature/tag-manager/types';
 import { useNotesStore } from '@/store/note-store';
 import { DragEvent, useRef } from 'react';
 
 interface Tag {
   id: number;
-  type: 'character' | 'place' | 'time' | 'date';
+  type: TagType;
   text: string;
   color?: string;
 }

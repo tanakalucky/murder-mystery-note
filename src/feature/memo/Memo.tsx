@@ -8,6 +8,7 @@ import { useNotesStore } from '@/store/note-store';
 import { usePlaceStore } from '@/store/place-store';
 import { Calendar, Clock, MapPin, Send, Trash2 } from 'lucide-react';
 import { useState } from 'react';
+import { TAG_TYPES } from '../tag-manager/types';
 
 export const Memo = () => {
   const { notes, setNotes, addNote, deleteNote, removeTagFromNote } = useNotesStore();
@@ -105,7 +106,7 @@ export const Memo = () => {
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
-                          removeTagFromNote(note.id, 'character');
+                          removeTagFromNote(note.id, TAG_TYPES.CHARACTER);
                         }}
                         className="ml-0.5 text-gray-500 hover:text-gray-700"
                       >
@@ -124,7 +125,7 @@ export const Memo = () => {
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
-                          removeTagFromNote(note.id, 'place');
+                          removeTagFromNote(note.id, TAG_TYPES.PLACE);
                         }}
                         className="ml-0.5 text-gray-500 hover:text-gray-700"
                       >
@@ -140,7 +141,7 @@ export const Memo = () => {
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
-                          removeTagFromNote(note.id, 'time');
+                          removeTagFromNote(note.id, TAG_TYPES.TIME);
                         }}
                         className="ml-0.5 text-gray-500 hover:text-gray-700"
                       >
@@ -156,7 +157,7 @@ export const Memo = () => {
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
-                          removeTagFromNote(note.id, 'date');
+                          removeTagFromNote(note.id, TAG_TYPES.DATE);
                         }}
                         className="ml-0.5 text-gray-500 hover:text-gray-700"
                       >

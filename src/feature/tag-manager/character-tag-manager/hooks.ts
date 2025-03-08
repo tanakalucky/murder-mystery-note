@@ -14,7 +14,7 @@ type UseCharacterTag = {
   deleteTag: (id: number) => void;
 };
 
-export const useCharaterTag = (): UseCharacterTag => {
+export const useCharacterTag = (): UseCharacterTag => {
   const { notes, setNotes } = useNotesStore();
   const { characters, setCharacters } = useCharacterStore();
   const [editingTagId, setEditingTagId] = useState<number | null>(null);
@@ -49,9 +49,9 @@ export const useCharaterTag = (): UseCharacterTag => {
   const deleteTag = (id: number) => {
     setCharacters(characters.filter((char) => char.id !== id));
 
+    const charName = characters.find((c) => c.id === id)?.name;
     setNotes(
       notes.map((note) => {
-        const charName = characters.find((c) => c.id === id)?.name;
         if (note.character === charName) {
           return { ...note, character: null };
         }

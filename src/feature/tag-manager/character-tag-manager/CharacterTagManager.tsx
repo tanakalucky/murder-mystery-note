@@ -4,7 +4,8 @@ import { useDragAndDrop } from '@/hooks/use-drag-and-drop';
 import { useCharacterStore } from '@/store/character-store';
 import { useState } from 'react';
 import { DraggableTag } from '../components/DraggableTag';
-import { useCharaterTag } from './hooks';
+import { TAG_TYPES } from '../types';
+import { useCharacterTag } from './hooks';
 
 export const CharacterTagManager = () => {
   const [newCharacterText, setNewCharacterText] = useState('');
@@ -21,7 +22,7 @@ export const CharacterTagManager = () => {
     startEditingTag,
     saveTag,
     deleteTag,
-  } = useCharaterTag();
+  } = useCharacterTag();
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     // 日本語入力中はEnterキーでの送信を無効化
@@ -118,7 +119,7 @@ export const CharacterTagManager = () => {
             ) : (
               <DraggableTag
                 handleDragStart={(e) =>
-                  handleDragStart(e, { id: char.id, type: 'character', text: char.name, color: char.color })
+                  handleDragStart(e, { id: char.id, type: TAG_TYPES.CHARACTER, text: char.name, color: char.color })
                 }
                 handleDragEnd={handleDragEnd}
                 onEditTag={() => startEditingTag(char.id, char.name, char.color)}

@@ -2,7 +2,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { CharacterTagManager } from './character-tag-manager/CharacterTagManager';
 import { DateTagManager } from './date-tag-manager/DateTagManager';
 import { PlaceTagManager } from './place-tag-manager/PlaceTagManager';
-import { TimeTagManger } from './time-tag-manager/TimeTagManger';
+import { TimeTagManager } from './time-tag-manager/TimeTagManger';
 
 export const TagManager = () => {
   return (
@@ -12,7 +12,7 @@ export const TagManager = () => {
 
         <PlaceTagManager />
 
-        <TimeTagManger />
+        <TimeTagManager />
 
         <DateTagManager />
       </ScrollArea>

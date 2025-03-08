@@ -5,6 +5,7 @@
  * Zustandを使用して状態管理を行い、ノートの追加、削除、タグの追加・削除などの機能を提供します。
  */
 
+import { TagType } from '@/feature/tag-manager/types';
 import { create } from 'zustand';
 
 // ノートの型定義
@@ -33,10 +34,10 @@ interface NotesState {
   deleteNote: (noteId: number) => void;
 
   // ノートにタグを追加する関数
-  addTagToNote: (noteId: number, tagType: 'character' | 'place' | 'time' | 'date', tagValue: string) => void;
+  addTagToNote: (noteId: number, tagType: TagType, tagValue: string) => void;
 
   // ノートからタグを削除する関数
-  removeTagFromNote: (noteId: number, tagType: 'character' | 'place' | 'time' | 'date') => void;
+  removeTagFromNote: (noteId: number, tagType: TagType) => void;
 }
 
 // Zustandストアの作成
@@ -77,7 +78,7 @@ export const useNotesStore = create<NotesState>((set) => ({
   },
 
   // ノートにタグを追加する関数
-  addTagToNote: (noteId: number, tagType: 'character' | 'place' | 'time' | 'date', tagValue: string) => {
+  addTagToNote: (noteId: number, tagType: TagType, tagValue: string) => {
     set((state) => ({
       notes: state.notes.map((note) => {
         if (note.id === noteId) {
@@ -92,7 +93,7 @@ export const useNotesStore = create<NotesState>((set) => ({
   },
 
   // ノートからタグを削除する関数
-  removeTagFromNote: (noteId: number, tagType: 'character' | 'place' | 'time' | 'date') => {
+  removeTagFromNote: (noteId: number, tagType: TagType) => {
     set((state) => ({
       notes: state.notes.map((note) => {
         if (note.id === noteId) {

@@ -5,9 +5,10 @@ import { useTimeStore } from '@/store/time-store';
 import { Clock } from 'lucide-react';
 import { useState } from 'react';
 import { DraggableTag } from '../components/DraggableTag';
+import { TAG_TYPES } from '../types';
 import { useTimeTag } from './hooks';
 
-export const TimeTagManger = () => {
+export const TimeTagManager = () => {
   const { times, setTimes } = useTimeStore();
   const [newTimeText, setNewTimeText] = useState('');
   const { handleDragStart, handleDragEnd } = useDragAndDrop();
@@ -62,7 +63,7 @@ export const TimeTagManger = () => {
               />
             ) : (
               <DraggableTag
-                handleDragStart={(e) => handleDragStart(e, { id: index, type: 'time', text: time })}
+                handleDragStart={(e) => handleDragStart(e, { id: index, type: TAG_TYPES.TIME, text: time })}
                 handleDragEnd={handleDragEnd}
                 onEditTag={() => startEditingTag(index, time)}
                 onDeleteTag={() => deleteTag(index)}

@@ -5,6 +5,7 @@ import { usePlaceStore } from '@/store/place-store';
 import { MapPin } from 'lucide-react';
 import { useState } from 'react';
 import { DraggableTag } from '../components/DraggableTag';
+import { TAG_TYPES } from '../types';
 import { usePlaceTag } from './hooks';
 
 export const PlaceTagManager = () => {
@@ -118,7 +119,7 @@ export const PlaceTagManager = () => {
             ) : (
               <DraggableTag
                 handleDragStart={(e) =>
-                  handleDragStart(e, { id: place.id, type: 'place', text: place.name, color: place.color })
+                  handleDragStart(e, { id: place.id, type: TAG_TYPES.PLACE, text: place.name, color: place.color })
                 }
                 handleDragEnd={handleDragEnd}
                 onEditTag={() => startEditingTag(place.id, place.name, place.color)}

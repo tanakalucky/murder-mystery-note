@@ -49,9 +49,9 @@ export const usePlaceTag = (): UsePlaceTag => {
   const deleteTag = (id: number) => {
     setPlaces(places.filter((place) => place.id !== id));
 
+    const placeName = places.find((p) => p.id === id)?.name;
     setNotes(
       notes.map((note) => {
-        const placeName = places.find((p) => p.id === id)?.name;
         if (note.place === placeName) {
           return { ...note, place: null };
         }

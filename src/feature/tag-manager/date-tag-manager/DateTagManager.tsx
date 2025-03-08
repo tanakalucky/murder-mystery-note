@@ -5,6 +5,7 @@ import { useDateStore } from '@/store/date-store';
 import { Calendar } from 'lucide-react';
 import { useState } from 'react';
 import { DraggableTag } from '../components/DraggableTag';
+import { TAG_TYPES } from '../types';
 import { useDateTag } from './hooks';
 
 export const DateTagManager = () => {
@@ -63,7 +64,7 @@ export const DateTagManager = () => {
               />
             ) : (
               <DraggableTag
-                handleDragStart={(e) => handleDragStart(e, { id: index, type: 'date', text: date })}
+                handleDragStart={(e) => handleDragStart(e, { id: index, type: TAG_TYPES.DATE, text: date })}
                 handleDragEnd={handleDragEnd}
                 onEditTag={() => startEditingTag(index, date)}
                 onDeleteTag={() => deleteTag(index)}
