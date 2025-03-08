@@ -82,6 +82,7 @@ export const useDragAndDrop = (): DragAndDropProps => {
     // ドロップターゲットのスタイルをリセット
     if (e.currentTarget) {
       e.currentTarget.classList.remove('bg-gray-100');
+      e.currentTarget.classList.remove('border-primary');
     }
   };
 
