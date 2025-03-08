@@ -3,19 +3,9 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Textarea } from '@/components/ui/textarea';
+import { Note, useNotesStore } from '@/store/note-store';
 import { Calendar, Clock, MapPin, Send, Tag, Trash2 } from 'lucide-react';
 import React, { useState, useRef } from 'react';
-
-// ノートの型定義
-interface Note {
-  id: number;
-  content: string;
-  character: string | null;
-  place: string | null;
-  time: string | null;
-  date: string | null;
-  createdAt: string;
-}
 
 // キャラクターの型定義
 interface Character {
@@ -41,7 +31,7 @@ interface Tag {
 
 const DragDropMysteryApp = () => {
   // 状態管理
-  const [notes, setNotes] = useState<Note[]>([]);
+  const { notes, addNote, deleteNote, addTagToNote, removeTagFromNote, setNotes } = useNotesStore();
   const [characters, setCharacters] = useState<Character[]>([]);
   const [places, setPlaces] = useState<Place[]>([]);
   const [quickTimes, setQuickTimes] = useState<string[]>([]);
@@ -64,20 +54,8 @@ const DragDropMysteryApp = () => {
   const dragOverItem = useRef<number | null>(null);
 
   // メモを追加
-  const addNote = () => {
-    if (newNote.trim() === '') return;
-
-    const noteObj = {
-      id: Date.now(),
-      content: newNote,
-      character: null,
-      place: null,
-      time: null,
-      date: null,
-      createdAt: new Date().toISOString(),
-    };
-
-    setNotes([...notes, noteObj]);
+  const handleAddNote = () => {
+    addNote(newNote);
     setNewNote('');
   };
 
@@ -126,78 +104,32 @@ const DragDropMysteryApp = () => {
   const handleDrop = (e: React.DragEvent<HTMLDivElement>, noteId: number) => {
     e.preventDefault();
 
-    // ドロップ時の視覚的フィードバックをリセット
-    if (e.currentTarget.classList) {
-      e.currentTarget.classList.remove('border-primary');
+    // ドロップされたタグのデータを取得
+    const tagData = JSON.parse(e.dataTransfer.getData('application/json')) as Tag;
+
+    // ドロップされたタグの種類に応じて処理
+    if (tagData) {
+      addTagToNote(noteId, tagData.type, tagData.text);
     }
 
-    // ドロップされたタグデータを取得
-    const tagData = e.dataTransfer.getData('application/json');
-    if (!tagData) return;
+    // ドラッグ関連の参照をクリア
+    dragItem.current = null;
+    dragOverItem.current = null;
 
-    const tag = JSON.parse(tagData) as Tag;
-
-    // ノートを更新
-    setNotes(
-      notes.map((note) => {
-        if (note.id === noteId) {
-          const updatedNote = { ...note };
-
-          // タグの種類に応じてノートの対応するフィールドを更新
-          switch (tag.type) {
-            case 'character':
-              updatedNote.character = updatedNote.character === tag.text ? null : tag.text;
-              break;
-            case 'place':
-              updatedNote.place = updatedNote.place === tag.text ? null : tag.text;
-              break;
-            case 'time':
-              updatedNote.time = updatedNote.time === tag.text ? null : tag.text;
-              break;
-            case 'date':
-              updatedNote.date = updatedNote.date === tag.text ? null : tag.text;
-              break;
-          }
-
-          return updatedNote;
-        }
-        return note;
-      }),
-    );
+    // ドロップターゲットのスタイルをリセット
+    if (e.currentTarget) {
+      e.currentTarget.classList.remove('bg-gray-100');
+    }
   };
 
   // タグをノートから削除
   const removeTag = (noteId: number, tagType: 'character' | 'place' | 'time' | 'date') => {
-    setNotes(
-      notes.map((note) => {
-        if (note.id === noteId) {
-          const updatedNote = { ...note };
-
-          switch (tagType) {
-            case 'character':
-              updatedNote.character = null;
-              break;
-            case 'place':
-              updatedNote.place = null;
-              break;
-            case 'time':
-              updatedNote.time = null;
-              break;
-            case 'date':
-              updatedNote.date = null;
-              break;
-          }
-
-          return updatedNote;
-        }
-        return note;
-      }),
-    );
+    removeTagFromNote(noteId, tagType);
   };
 
   // メモを削除
-  const deleteNote = (noteId: number) => {
-    setNotes(notes.filter((note) => note.id !== noteId));
+  const handleDeleteNote = (noteId: number) => {
+    deleteNote(noteId);
   };
 
   // キーボードイベントハンドラー
@@ -205,7 +137,7 @@ const DragDropMysteryApp = () => {
     // 日本語入力中はEnterキーでの送信を無効化
     if (e.key === 'Enter' && !e.shiftKey && !e.nativeEvent.isComposing) {
       e.preventDefault();
-      addNote();
+      handleAddNote();
     }
   };
 
@@ -1018,7 +950,7 @@ const DragDropMysteryApp = () => {
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => deleteNote(note.id)}
+                      onClick={() => handleDeleteNote(note.id)}
                       className="h-5 w-5 p-0 text-red-500 hover:text-red-700 flex-shrink-0"
                     >
                       <Trash2 className="h-3 w-3" />
@@ -1038,7 +970,10 @@ const DragDropMysteryApp = () => {
                         ></div>
                         <span>{note.character}</span>
                         <button
-                          onClick={() => removeTag(note.id, 'character')}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            removeTag(note.id, 'character');
+                          }}
                           className="ml-0.5 text-gray-500 hover:text-gray-700"
                         >
                           ×
@@ -1054,7 +989,10 @@ const DragDropMysteryApp = () => {
                         <MapPin className="h-1.5 w-1.5 mr-0.5" style={{ color: getPlaceColor(note.place) }} />
                         <span>{note.place}</span>
                         <button
-                          onClick={() => removeTag(note.id, 'place')}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            removeTag(note.id, 'place');
+                          }}
                           className="ml-0.5 text-gray-500 hover:text-gray-700"
                         >
                           ×
@@ -1067,7 +1005,10 @@ const DragDropMysteryApp = () => {
                         <Clock className="h-1.5 w-1.5 mr-0.5 text-gray-500" />
                         <span>{note.time}</span>
                         <button
-                          onClick={() => removeTag(note.id, 'time')}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            removeTag(note.id, 'time');
+                          }}
                           className="ml-0.5 text-gray-500 hover:text-gray-700"
                         >
                           ×
@@ -1080,7 +1021,10 @@ const DragDropMysteryApp = () => {
                         <Calendar className="h-1.5 w-1.5 mr-0.5 text-gray-500" />
                         <span>{note.date}</span>
                         <button
-                          onClick={() => removeTag(note.id, 'date')}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            removeTag(note.id, 'date');
+                          }}
                           className="ml-0.5 text-gray-500 hover:text-gray-700"
                         >
                           ×
@@ -1121,7 +1065,7 @@ const DragDropMysteryApp = () => {
             />
             <Button
               variant="ghost"
-              onClick={addNote}
+              onClick={handleAddNote}
               className="ml-2 self-end h-9 w-9 p-0 rounded-full"
               disabled={newNote.trim() === ''}
             >
