@@ -3,17 +3,11 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Textarea } from '@/components/ui/textarea';
-import { Note, useNotesStore } from '@/store/note-store';
 import { Calendar, Clock, MapPin, Send, Tag, Trash2 } from 'lucide-react';
 import React, { useState, useRef } from 'react';
 import { useCharacterStore } from './store/character-store';
-
-// 場所の型定義
-interface Place {
-  id: number;
-  name: string;
-  color: string;
-}
+import { Note, useNotesStore } from './store/note-store';
+import { usePlaceStore } from './store/place-store';
 
 // タグの型定義
 interface Tag {
@@ -27,7 +21,7 @@ const DragDropMysteryApp = () => {
   // 状態管理
   const { notes, addNote, deleteNote, addTagToNote, removeTagFromNote, setNotes } = useNotesStore();
   const { characters, setCharacters, getCharacterColor } = useCharacterStore();
-  const [places, setPlaces] = useState<Place[]>([]);
+  const { places, setPlaces, getPlaceColor } = usePlaceStore();
   const [quickTimes, setQuickTimes] = useState<string[]>([]);
   const [quickDates, setQuickDates] = useState<string[]>([]);
   const [newNote, setNewNote] = useState('');
@@ -133,12 +127,6 @@ const DragDropMysteryApp = () => {
       e.preventDefault();
       handleAddNote();
     }
-  };
-
-  // 場所名から色を取得するヘルパー関数
-  const getPlaceColor = (placeName: string) => {
-    const place = places.find((p) => p.name === placeName);
-    return place ? place.color : '#000000';
   };
 
   // フィルター適用後のノート
