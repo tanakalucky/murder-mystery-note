@@ -10,14 +10,11 @@ const DragDropMysteryApp = () => {
 
   return (
     <div className="flex h-screen overflow-hidden">
-      {/* 左側：メモ一覧と入力 */}
       <div className="w-1/2 flex flex-col overflow-hidden p-4 border-r">
         <Memo />
       </div>
 
-      {/* 右側：タグパレットと参照ビュー */}
       <div className="w-1/2 bg-white p-4 overflow-hidden flex flex-col">
-        {/* 上部切り替えタブ */}
         <div className="mb-3 border-b">
           <div className="flex bg-muted rounded-t-md overflow-hidden">
             <button
