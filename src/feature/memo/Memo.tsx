@@ -45,7 +45,6 @@ export const Memo = () => {
               className="transition-colors border-2 py-0"
             >
               <CardContent className="p-2">
-                {/* メモ本文 */}
                 <div className="flex justify-between items-start gap-1">
                   {editingNote === note.id ? (
                     <Textarea
@@ -80,7 +79,6 @@ export const Memo = () => {
                     </div>
                   )}
 
-                  {/* 削除ボタン */}
                   <Button
                     variant="ghost"
                     size="sm"
@@ -91,7 +89,6 @@ export const Memo = () => {
                   </Button>
                 </div>
 
-                {/* タグ表示エリア */}
                 <div className="flex flex-wrap gap-1 mt-1 text-[10px] leading-none">
                   {note.character && (
                     <div
@@ -172,23 +169,8 @@ export const Memo = () => {
         </div>
       </ScrollArea>
 
-      {/* メモ入力エリア */}
       <div className="mt-4 pt-4 border-t flex-shrink-0">
-        <div
-          className="flex items-end border rounded-md p-2 bg-white"
-          onDragOver={(e) => {
-            e.preventDefault();
-            e.currentTarget.classList.add('border-primary');
-          }}
-          onDragLeave={(e) => {
-            e.currentTarget.classList.remove('border-primary');
-          }}
-          onDrop={(e) => {
-            e.preventDefault();
-            e.currentTarget.classList.remove('border-primary');
-            // 新規メモ入力欄へのドロップ処理（今回は実装しない）
-          }}
-        >
+        <div className="flex items-end border rounded-md p-2 bg-white">
           <Textarea
             placeholder="メモを入力してください...(Enterで送信、Shift+Enterで改行)"
             value={newNote}
@@ -199,6 +181,7 @@ export const Memo = () => {
           />
           <Button
             variant="ghost"
+            size="icon"
             onClick={handleAddNote}
             className="ml-2 self-end h-9 w-9 p-0 rounded-full"
             disabled={newNote.trim() === ''}
@@ -206,7 +189,6 @@ export const Memo = () => {
             <Send className="h-5 w-5" />
           </Button>
         </div>
-        <div className="text-xs text-gray-500 mt-1 px-2">タグをドラッグ＆ドロップしてメモに追加できます</div>
       </div>
     </>
   );
