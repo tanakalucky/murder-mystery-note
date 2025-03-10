@@ -11,7 +11,7 @@ import { usePlaceTag } from './hooks';
 export const PlaceTagManager = () => {
   const { places, setPlaces } = usePlaceStore();
   const [newPlaceText, setNewPlaceText] = useState('');
-  const [newTagColor, setNewTagColor] = useState('#000000');
+  const [newTagColor, setNewTagColor] = useState('#FFFFFF');
   const { handleDragStart, handleDragEnd } = useDragAndDrop();
   const {
     editingTagId,

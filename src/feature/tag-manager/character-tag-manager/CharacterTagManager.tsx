@@ -9,7 +9,7 @@ import { useCharacterTag } from './hooks';
 
 export const CharacterTagManager = () => {
   const [newCharacterText, setNewCharacterText] = useState('');
-  const [newTagColor, setNewTagColor] = useState('#000000');
+  const [newTagColor, setNewTagColor] = useState('#FFFFFF');
   const { characters, setCharacters } = useCharacterStore();
   const { handleDragStart, handleDragEnd } = useDragAndDrop();
   const {
