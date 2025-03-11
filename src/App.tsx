@@ -1,21 +1,25 @@
 import { FileQuestion, FileText, Tag, TimerIcon } from 'lucide-react';
-import { useEffect, useState } from 'react';
-import { Memo } from './feature/memo/Memo';
-import { PdfManager } from './feature/pdf-manager/PdfManager';
-import { TagManager } from './feature/tag-manager/TagManager';
-import { Timeline } from './feature/timeline/Timeline';
+import { Suspense, lazy, useEffect, useState } from 'react';
+
+const Memo = lazy(() => import('./feature/memo/Memo'));
+const TagManager = lazy(() => import('./feature/tag-manager/TagManager'));
+const Timeline = lazy(() => import('./feature/timeline/Timeline'));
+const PdfManager = lazy(() => import('./feature/pdf-manager/PdfManager'));
+
+import MemoSkeleton from './feature/memo/MemoSkeleton';
+import PdfManagerSkeleton from './feature/pdf-manager/PdfManagerSkeleton';
+import TagManagerSkeleton from './feature/tag-manager/TagManagerSkeleton';
+import TimelineSkeleton from './feature/timeline/TimelineSkeleton';
 
 const DragDropMysteryApp = () => {
   const [rightPanelMode, setRightPanelMode] = useState<'tags' | 'timeline' | 'pdf'>('tags');
 
-  // 常にダークモードを適用
   useEffect(() => {
     document.documentElement.classList.add('dark');
   }, []);
 
   return (
     <div className="flex h-screen overflow-hidden">
-      {/* 左側のメモパネル */}
       <div className="w-1/2 flex flex-col overflow-hidden p-4 border-r">
         <div className="mb-2 flex justify-between items-center">
           <h2 className="text-xl font-serif tracking-wider text-primary flex items-center">
@@ -23,10 +27,11 @@ const DragDropMysteryApp = () => {
             ミステリーノート
           </h2>
         </div>
-        <Memo />
+        <Suspense fallback={<MemoSkeleton />}>
+          <Memo />
+        </Suspense>
       </div>
 
-      {/* 右側のパネル */}
       <div className="w-1/2 p-4 overflow-hidden flex flex-col">
         <div className="mb-3 border-b">
           <div className="flex bg-muted rounded-t-md overflow-hidden">
@@ -54,9 +59,21 @@ const DragDropMysteryApp = () => {
           </div>
         </div>
 
-        {rightPanelMode === 'tags' && <TagManager />}
-        {rightPanelMode === 'timeline' && <Timeline />}
-        {rightPanelMode === 'pdf' && <PdfManager />}
+        {rightPanelMode === 'tags' && (
+          <Suspense fallback={<TagManagerSkeleton />}>
+            <TagManager />
+          </Suspense>
+        )}
+        {rightPanelMode === 'timeline' && (
+          <Suspense fallback={<TimelineSkeleton />}>
+            <Timeline />
+          </Suspense>
+        )}
+        {rightPanelMode === 'pdf' && (
+          <Suspense fallback={<PdfManagerSkeleton />}>
+            <PdfManager />
+          </Suspense>
+        )}
       </div>
     </div>
   );

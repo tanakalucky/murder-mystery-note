@@ -5,7 +5,7 @@ import { usePlaceStore } from '@/store/place-store';
 import { Clock, MapPin } from 'lucide-react';
 import { useGroupedNotes } from './hooks';
 
-export const Timeline = () => {
+const Timeline = () => {
   const { dateGroups } = useGroupedNotes();
   const { getCharacterColor } = useCharacterStore();
   const { getPlaceColor } = usePlaceStore();
@@ -86,3 +86,5 @@ export const Timeline = () => {
     </ScrollArea>
   );
 };
+
+export default Timeline;

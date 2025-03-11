@@ -10,7 +10,7 @@ import { Calendar, Clock, MapPin, Send, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { TAG_TYPES } from '../tag-manager/types';
 
-export const Memo = () => {
+const Memo = () => {
   const { notes, setNotes, addNote, deleteNote, removeTagFromNote } = useNotesStore();
   const { getCharacterColor } = useCharacterStore();
   const { getPlaceColor } = usePlaceStore();
@@ -193,3 +193,5 @@ export const Memo = () => {
     </>
   );
 };
+
+export default Memo;

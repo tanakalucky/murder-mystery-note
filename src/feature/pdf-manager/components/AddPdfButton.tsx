@@ -5,7 +5,7 @@ import { useRef } from 'react';
 
 type AddPdfButtonProps = React.ComponentProps<'button'>;
 
-export const AddPdfButton = ({ ...props }: AddPdfButtonProps) => {
+const AddPdfButton = ({ ...props }: AddPdfButtonProps) => {
   const addPdf = usePdfStore((state) => state.addPdf);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -36,3 +36,5 @@ export const AddPdfButton = ({ ...props }: AddPdfButtonProps) => {
     </>
   );
 };
+
+export default AddPdfButton;
