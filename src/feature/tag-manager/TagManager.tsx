@@ -4,7 +4,7 @@ import { DateTagManager } from './date-tag-manager/DateTagManager';
 import { PlaceTagManager } from './place-tag-manager/PlaceTagManager';
 import { TimeTagManager } from './time-tag-manager/TimeTagManger';
 
-export const TagManager = () => {
+const TagManager = () => {
   return (
     <div className="flex flex-col h-full">
       <ScrollArea className="flex-1 max-h-[calc(100vh-12rem)]">
@@ -19,3 +19,5 @@ export const TagManager = () => {
     </div>
   );
 };
+
+export default TagManager;

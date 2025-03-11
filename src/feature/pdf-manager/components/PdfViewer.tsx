@@ -3,7 +3,7 @@ import { FileText } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { Document, Page } from 'react-pdf';
 
-export const PdfViewer = () => {
+const PdfViewer = () => {
   const currentPdf = usePdfStore((state) => state.currentPdf);
   const [numPages, setNumPages] = useState<number | null>(null);
   const scrollAreaRef = useRef<HTMLDivElement>(null);
@@ -84,3 +84,5 @@ export const PdfViewer = () => {
     </div>
   );
 };
+
+export default PdfViewer;
