@@ -78,6 +78,7 @@ const PdfViewer = () => {
             renderAnnotationLayer={true}
             scale={currentPdf.scale}
             loading={<></>}
+            canvasBackground="#a9a9a9"
           />
         ))}
       </Document>
