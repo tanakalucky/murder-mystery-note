@@ -1,15 +1,13 @@
 import { FileQuestion, FileText, Tag, TimerIcon } from 'lucide-react';
 import { Suspense, lazy, useEffect, useState } from 'react';
+import MemoSkeleton from './feature/memo/MemoSkeleton';
+import PdfManager from './feature/pdf-manager/PdfManager';
+import TagManagerSkeleton from './feature/tag-manager/TagManagerSkeleton';
+import TimelineSkeleton from './feature/timeline/TimelineSkeleton';
 
 const Memo = lazy(() => import('./feature/memo/Memo'));
 const TagManager = lazy(() => import('./feature/tag-manager/TagManager'));
 const Timeline = lazy(() => import('./feature/timeline/Timeline'));
-const PdfManager = lazy(() => import('./feature/pdf-manager/PdfManager'));
-
-import MemoSkeleton from './feature/memo/MemoSkeleton';
-import PdfManagerSkeleton from './feature/pdf-manager/PdfManagerSkeleton';
-import TagManagerSkeleton from './feature/tag-manager/TagManagerSkeleton';
-import TimelineSkeleton from './feature/timeline/TimelineSkeleton';
 
 const DragDropMysteryApp = () => {
   const [rightPanelMode, setRightPanelMode] = useState<'tags' | 'timeline' | 'pdf'>('tags');
@@ -69,11 +67,7 @@ const DragDropMysteryApp = () => {
             <Timeline />
           </Suspense>
         )}
-        {rightPanelMode === 'pdf' && (
-          <Suspense fallback={<PdfManagerSkeleton />}>
-            <PdfManager />
-          </Suspense>
-        )}
+        {rightPanelMode === 'pdf' && <PdfManager />}
       </div>
     </div>
   );
