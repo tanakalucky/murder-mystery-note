@@ -1,14 +1,12 @@
-import { pdfjs } from 'react-pdf';
-import 'react-pdf/dist/Page/AnnotationLayer.css';
-import 'react-pdf/dist/Page/TextLayer.css';
+import { Suspense, lazy } from 'react';
 import AddPdfButton from './components/AddPdfButton';
 import { DeletePdfButton } from './components/DeletePdfButton';
 import { PdfSelect } from './components/PdfSelect';
-import PdfViewer from './components/PdfViewer';
+import PdfViewerSkeleton from './components/PdfViewerSkeleton';
 import { ZoomInButton } from './components/ZoomInButton';
 import { ZoomOutButton } from './components/ZoomOutButton';
 
-pdfjs.GlobalWorkerOptions.workerSrc = new URL('pdfjs-dist/build/pdf.worker.min.mjs', import.meta.url).toString();
+const PdfViewer = lazy(() => import('./components/PdfViewer'));
 
 const PdfManager = () => {
   return (
@@ -24,7 +22,9 @@ const PdfManager = () => {
         </div>
       </div>
 
-      <PdfViewer />
+      <Suspense fallback={<PdfViewerSkeleton />}>
+        <PdfViewer />
+      </Suspense>
     </div>
   );
 };

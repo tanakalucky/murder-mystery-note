@@ -1,7 +1,12 @@
+import 'react-pdf/dist/Page/AnnotationLayer.css';
+import 'react-pdf/dist/Page/TextLayer.css';
 import { usePdfStore } from '@/store/pdf-store';
 import { FileText } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { Document, Page } from 'react-pdf';
+import { pdfjs } from 'react-pdf';
+
+pdfjs.GlobalWorkerOptions.workerSrc = `//unpkg.com/pdfjs-dist@${pdfjs.version}/build/pdf.worker.min.mjs`;
 
 const PdfViewer = () => {
   const currentPdf = usePdfStore((state) => state.currentPdf);
