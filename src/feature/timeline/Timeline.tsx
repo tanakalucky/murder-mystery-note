@@ -4,7 +4,10 @@ import { useCharacterStore } from '@/store/character-store';
 import { Note } from '@/store/note-store';
 import { usePlaceStore } from '@/store/place-store';
 import { useTimelineStore } from '@/store/timeline-store';
-import { CalendarDays, ChevronDown, ChevronRight, Clock, MapPin, User } from 'lucide-react';
+import { Clock, User } from 'lucide-react';
+import { DateAccordion } from './components/DateAccordion';
+import { PlaceAccordion } from './components/PlaceAccordion';
+import { TimeAccordion } from './components/TimeAccordion';
 import { useGroupedNotes } from './hooks';
 
 interface CharacterGroup {
@@ -119,122 +122,67 @@ const Timeline = () => {
     <ScrollArea className="h-full pr-2">
       <div className="space-y-3 p-2">
         {dateGroups.map((dateGroup, dateIndex) => (
-          <div
+          <DateAccordion
             key={dateIndex}
-            className="bg-card rounded-lg border-2 border-primary/60 overflow-hidden shadow-lg mb-6 last:mb-0"
+            date={dateGroup.date}
+            isExpanded={isDateExpanded(dateIndex)}
+            onToggle={() => toggleDate(dateIndex)}
           >
-            <div
-              className="flex items-center justify-between p-3 bg-primary/40 cursor-pointer sticky top-0 z-10"
-              onClick={() => toggleDate(dateIndex)}
-            >
-              <div className="flex items-center">
-                <CalendarDays className="h-5 w-5 mr-2 text-primary-foreground" />
-                <span className="font-bold text-primary-foreground text-lg">{dateGroup.date}</span>
-              </div>
-              {isDateExpanded(dateIndex) ? (
-                <ChevronDown className="h-5 w-5 text-primary-foreground" />
-              ) : (
-                <ChevronRight className="h-5 w-5 text-primary-foreground" />
-              )}
-            </div>
+            {dateGroup.timeGroups.map((timeGroup, timeIndex) => (
+              <TimeAccordion
+                key={timeIndex}
+                time={timeGroup.time}
+                isExpanded={isTimeExpanded(dateIndex, timeIndex)}
+                onToggle={() => toggleTime(dateIndex, timeIndex)}
+              >
+                {groupNotesByPlace(timeGroup.characterGroups).map((placeGroup, placeIndex) => {
+                  const placeColor = getPlaceColor(placeGroup.place);
 
-            {isDateExpanded(dateIndex) && (
-              <div className="p-4 space-y-4 bg-card">
-                {dateGroup.timeGroups.map((timeGroup, timeIndex) => (
-                  <div
-                    key={timeIndex}
-                    className="bg-muted rounded-md border-l-4 border border-secondary overflow-hidden shadow-md"
-                  >
-                    <div
-                      className="flex items-center justify-between p-3 bg-secondary cursor-pointer"
-                      onClick={() => toggleTime(dateIndex, timeIndex)}
+                  return (
+                    <PlaceAccordion
+                      key={placeIndex}
+                      place={placeGroup.place}
+                      placeColor={placeColor}
+                      isExpanded={isPlaceExpanded(dateIndex, timeIndex, placeIndex)}
+                      onToggle={() => togglePlace(dateIndex, timeIndex, placeIndex)}
+                      getAlphaColor={getAlphaColor}
                     >
-                      <div className="flex items-center">
-                        <Clock className="h-4 w-4 mr-2 text-secondary-foreground" />
-                        <span className="font-semibold text-secondary-foreground text-sm">{timeGroup.time}</span>
-                      </div>
-                      {isTimeExpanded(dateIndex, timeIndex) ? (
-                        <ChevronDown className="h-4 w-4 text-secondary-foreground" />
-                      ) : (
-                        <ChevronRight className="h-4 w-4 text-secondary-foreground" />
-                      )}
-                    </div>
+                      {placeGroup.characters.map((characterGroup, charIndex) => {
+                        const charColor = getCharacterColor(characterGroup.character);
 
-                    {isTimeExpanded(dateIndex, timeIndex) && (
-                      <div className="p-3 space-y-3 bg-background">
-                        {groupNotesByPlace(timeGroup.characterGroups).map((placeGroup, placeIndex) => {
-                          const placeColor = getPlaceColor(placeGroup.place);
-
-                          return (
-                            <div
-                              key={placeIndex}
-                              className="rounded-md border-l-4 border overflow-hidden shadow-sm"
-                              style={{ borderLeftColor: placeColor, borderColor: getAlphaColor(placeColor, 0.3) }}
-                            >
-                              <div
-                                className="flex items-center justify-between p-2 cursor-pointer"
-                                style={{ backgroundColor: getAlphaColor(placeColor, 0.1) }}
-                                onClick={() => togglePlace(dateIndex, timeIndex, placeIndex)}
-                              >
-                                <div className="flex items-center">
-                                  <MapPin className="h-4 w-4 mr-2" style={{ color: placeColor }} />
-                                  <span className="text-sm font-medium text-foreground">{placeGroup.place}</span>
-                                </div>
-                                {isPlaceExpanded(dateIndex, timeIndex, placeIndex) ? (
-                                  <ChevronDown className="h-4 w-4 text-foreground/70" />
-                                ) : (
-                                  <ChevronRight className="h-4 w-4 text-foreground/70" />
-                                )}
-                              </div>
-
-                              {isPlaceExpanded(dateIndex, timeIndex, placeIndex) && (
-                                <div className="p-2 space-y-2 bg-background/95">
-                                  {placeGroup.characters.map((characterGroup, charIndex) => {
-                                    const charColor = getCharacterColor(characterGroup.character);
-
-                                    return (
-                                      <div
-                                        key={charIndex}
-                                        className="mb-2 last:mb-0 p-2 rounded-md border-l-3 border"
-                                        style={{
-                                          borderLeftColor: charColor,
-                                          borderColor: getAlphaColor(charColor, 0.3),
-                                          backgroundColor: getAlphaColor(charColor, 0.1),
-                                        }}
-                                      >
-                                        <div className="flex items-center mb-2">
-                                          <User className="h-3 w-3 mr-1" style={{ color: charColor }} />
-                                          <span className="text-xs font-medium text-foreground">
-                                            {characterGroup.character}
-                                          </span>
-                                        </div>
-
-                                        <div className="space-y-2 ml-3">
-                                          {characterGroup.notes.map((note, noteIndex) => (
-                                            <Card key={noteIndex} className="bg-background shadow-sm py-0 border">
-                                              <CardContent className="p-2 overflow-hidden">
-                                                <div className="whitespace-pre-wrap text-foreground text-xs">
-                                                  {note.content}
-                                                </div>
-                                              </CardContent>
-                                            </Card>
-                                          ))}
-                                        </div>
-                                      </div>
-                                    );
-                                  })}
-                                </div>
-                              )}
+                        return (
+                          <div
+                            key={charIndex}
+                            className="mb-2 last:mb-0 p-2 rounded-md border-l-3 border"
+                            style={{
+                              borderLeftColor: charColor,
+                              borderColor: getAlphaColor(charColor, 0.3),
+                              backgroundColor: getAlphaColor(charColor, 0.1),
+                            }}
+                          >
+                            <div className="flex items-center mb-2">
+                              <User className="h-3 w-3 mr-1" style={{ color: charColor }} />
+                              <span className="text-xs font-medium text-foreground">{characterGroup.character}</span>
                             </div>
-                          );
-                        })}
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
+
+                            <div className="space-y-2 ml-3">
+                              {characterGroup.notes.map((note, noteIndex) => (
+                                <Card key={noteIndex} className="bg-background shadow-sm py-0 border">
+                                  <CardContent className="p-2 overflow-hidden">
+                                    <div className="whitespace-pre-wrap text-foreground text-xs">{note.content}</div>
+                                  </CardContent>
+                                </Card>
+                              ))}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </PlaceAccordion>
+                  );
+                })}
+              </TimeAccordion>
+            ))}
+          </DateAccordion>
         ))}
       </div>
     </ScrollArea>
