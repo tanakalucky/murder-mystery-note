@@ -1,14 +1,48 @@
 import { Card, CardContent } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { useCharacterStore } from '@/store/character-store';
+import { Note } from '@/store/note-store';
 import { usePlaceStore } from '@/store/place-store';
-import { Clock, MapPin } from 'lucide-react';
+import { useTimelineStore } from '@/store/timeline-store';
+import { Clock, User } from 'lucide-react';
+import { DateAccordion } from './components/DateAccordion';
+import { PlaceAccordion } from './components/PlaceAccordion';
+import { TimeAccordion } from './components/TimeAccordion';
 import { useGroupedNotes } from './hooks';
+
+interface CharacterGroup {
+  character: string;
+  notes: Note[];
+}
+
+interface PlaceNote extends Note {
+  characterName: string;
+}
+
+interface PlaceGroup {
+  place: string;
+  characters: {
+    character: string;
+    notes: PlaceNote[];
+  }[];
+}
 
 const Timeline = () => {
   const { dateGroups } = useGroupedNotes();
   const { getCharacterColor } = useCharacterStore();
   const { getPlaceColor } = usePlaceStore();
+
+  const { expandedDates, expandedTimes, expandedPlaces, toggleDate, toggleTime, togglePlace } = useTimelineStore();
+
+  const isDateExpanded = (dateIndex: number) => expandedDates[dateIndex] !== false;
+  const isTimeExpanded = (dateIndex: number, timeIndex: number) => {
+    const key = `${dateIndex}-${timeIndex}`;
+    return expandedTimes[key] !== false;
+  };
+  const isPlaceExpanded = (dateIndex: number, timeIndex: number, placeIndex: number) => {
+    const key = `${dateIndex}-${timeIndex}-${placeIndex}`;
+    return expandedPlaces[key] !== false;
+  };
 
   if (dateGroups.length === 0) {
     return (
@@ -20,67 +54,135 @@ const Timeline = () => {
     );
   }
 
+  // 色を薄くする関数
+  const getAlphaColor = (color: string, alpha: number = 0.2): string => {
+    // HEXカラーの場合はRGBAに変換
+    if (color.startsWith('#')) {
+      const r = parseInt(color.slice(1, 3), 16);
+      const g = parseInt(color.slice(3, 5), 16);
+      const b = parseInt(color.slice(5, 7), 16);
+      return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+    }
+    // すでにrgbaの場合は透明度だけ変更
+    if (color.startsWith('rgba')) {
+      return color.replace(/rgba\((\d+),\s*(\d+),\s*(\d+),\s*[\d.]+\)/, `rgba($1, $2, $3, ${alpha})`);
+    }
+    // rgbの場合はrgbaに変換
+    if (color.startsWith('rgb')) {
+      return color.replace(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/, `rgba($1, $2, $3, ${alpha})`);
+    }
+    return color;
+  };
+
+  // 場所ごとにノートをグループ化する関数
+  const groupNotesByPlace = (characterGroups: CharacterGroup[]): PlaceGroup[] => {
+    const placeGroups: Record<string, PlaceNote[]> = {};
+
+    characterGroups.forEach((characterGroup) => {
+      characterGroup.notes.forEach((note) => {
+        const placeKey = note.place || '場所不明';
+        if (!placeGroups[placeKey]) {
+          placeGroups[placeKey] = [];
+        }
+
+        // キャラクター情報を含めてノートを追加
+        placeGroups[placeKey].push({
+          ...note,
+          characterName: characterGroup.character,
+        });
+      });
+    });
+
+    // 場所ごとのグループを配列に変換
+    return Object.entries(placeGroups).map(([place, notes]) => {
+      // キャラクターごとにノートを再グループ化
+      const characterGroups: Record<string, PlaceNote[]> = {};
+      notes.forEach((note) => {
+        const charKey = note.characterName;
+        if (!characterGroups[charKey]) {
+          characterGroups[charKey] = [];
+        }
+        characterGroups[charKey].push(note);
+      });
+
+      // キャラクターグループを配列に変換
+      const characters = Object.entries(characterGroups).map(([character, notes]) => ({
+        character,
+        notes,
+      }));
+
+      return {
+        place,
+        characters,
+      };
+    });
+  };
+
   return (
     <ScrollArea className="h-full pr-2">
       <div className="space-y-3 p-2">
         {dateGroups.map((dateGroup, dateIndex) => (
-          <div key={dateIndex} className="mb-6 last:mb-0">
-            <div className="bg-sidebar px-4 py-2 rounded-t-md border-b-2 border-primary mb-2 sticky top-0 z-10">
-              <h3 className="font-semibold text-foreground">{dateGroup.date}</h3>
-            </div>
+          <DateAccordion
+            key={dateIndex}
+            date={dateGroup.date}
+            isExpanded={isDateExpanded(dateIndex)}
+            onToggle={() => toggleDate(dateIndex)}
+          >
+            {dateGroup.timeGroups.map((timeGroup, timeIndex) => (
+              <TimeAccordion
+                key={timeIndex}
+                time={timeGroup.time}
+                isExpanded={isTimeExpanded(dateIndex, timeIndex)}
+                onToggle={() => toggleTime(dateIndex, timeIndex)}
+              >
+                {groupNotesByPlace(timeGroup.characterGroups).map((placeGroup, placeIndex) => {
+                  const placeColor = getPlaceColor(placeGroup.place);
 
-            <div className="space-y-6 relative">
-              {dateGroup.timeGroups.map((timeGroup, timeIndex) => (
-                <div key={timeIndex} className="mb-4 last:mb-0">
-                  <div className="flex items-center mb-2">
-                    <div className="bg-sidebar w-12 shrink-0 py-1 flex flex-col items-center justify-start border border-primary rounded-md">
-                      <span className="font-medium text-foreground text-xs">{timeGroup.time}</span>
-                    </div>
-                    <div className="ml-2 h-0.5 flex-grow bg-primary"></div>
-                  </div>
+                  return (
+                    <PlaceAccordion
+                      key={placeIndex}
+                      place={placeGroup.place}
+                      placeColor={placeColor}
+                      isExpanded={isPlaceExpanded(dateIndex, timeIndex, placeIndex)}
+                      onToggle={() => togglePlace(dateIndex, timeIndex, placeIndex)}
+                      getAlphaColor={getAlphaColor}
+                    >
+                      {placeGroup.characters.map((characterGroup, charIndex) => {
+                        const charColor = getCharacterColor(characterGroup.character);
 
-                  <div className="space-y-4 ml-4">
-                    {timeGroup.characterGroups.map((characterGroup, charIndex) => (
-                      <div key={charIndex} className="mb-3 last:mb-0">
-                        <div className="flex items-center mb-1">
+                        return (
                           <div
-                            className="w-2 h-2 rounded-full mr-1"
-                            style={{ backgroundColor: getCharacterColor(characterGroup.character) }}
-                          ></div>
-                          <span className="text-xs font-medium text-foreground">{characterGroup.character}</span>
-                        </div>
+                            key={charIndex}
+                            className="mb-2 last:mb-0 p-2 rounded-md border-l-3 border"
+                            style={{
+                              borderLeftColor: charColor,
+                              borderColor: getAlphaColor(charColor, 0.3),
+                              backgroundColor: getAlphaColor(charColor, 0.1),
+                            }}
+                          >
+                            <div className="flex items-center mb-2">
+                              <User className="h-3 w-3 mr-1" style={{ color: charColor }} />
+                              <span className="text-xs font-medium text-foreground">{characterGroup.character}</span>
+                            </div>
 
-                        <div className="space-y-2 ml-3">
-                          {characterGroup.notes.map((note, noteIndex) => (
-                            <Card key={noteIndex} className="bg-sidebar shadow-sm py-0 border border-primary">
-                              <CardContent className="p-0 overflow-hidden">
-                                <div className="flex">
-                                  <div className="flex-1 p-2">
-                                    <div className="flex flex-wrap items-start gap-1 mb-1 text-xs">
-                                      {note.place && (
-                                        <div className="flex items-center">
-                                          <MapPin
-                                            className="h-2 w-2 mr-0.5"
-                                            style={{ color: getPlaceColor(note.place) }}
-                                          />
-                                          <span className="text-foreground">{note.place}</span>
-                                        </div>
-                                      )}
-                                    </div>
+                            <div className="space-y-2 ml-3">
+                              {characterGroup.notes.map((note, noteIndex) => (
+                                <Card key={noteIndex} className="bg-background shadow-sm py-0 border">
+                                  <CardContent className="p-2 overflow-hidden">
                                     <div className="whitespace-pre-wrap text-foreground text-xs">{note.content}</div>
-                                  </div>
-                                </div>
-                              </CardContent>
-                            </Card>
-                          ))}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
+                                  </CardContent>
+                                </Card>
+                              ))}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </PlaceAccordion>
+                  );
+                })}
+              </TimeAccordion>
+            ))}
+          </DateAccordion>
         ))}
       </div>
     </ScrollArea>
