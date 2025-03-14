@@ -7,5 +7,8 @@ interface DateState {
 
 export const useDateStore = create<DateState>((set) => ({
   dates: [],
-  setDates: (dates: string[]) => set({ dates }),
+  setDates: (dates: string[]) => {
+    const sortedDates = [...dates].sort();
+    set({ dates: sortedDates });
+  },
 }));
