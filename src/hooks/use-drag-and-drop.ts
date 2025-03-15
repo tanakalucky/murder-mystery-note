@@ -23,7 +23,7 @@ export const useDragAndDrop = (): DragAndDropProps => {
 
   const { addTagToNote } = useNotesStore();
 
-  const handleDragStart = (e: React.DragEvent<HTMLDivElement>, tag: Tag) => {
+  const handleDragStart = (e: DragEvent<HTMLDivElement>, tag: Tag) => {
     // タグの情報をドラッグデータに設定
     e.dataTransfer.setData('application/json', JSON.stringify(tag));
     dragItem.current = tag;
@@ -35,7 +35,7 @@ export const useDragAndDrop = (): DragAndDropProps => {
     }
   };
 
-  const handleDragEnd = (e: React.DragEvent<HTMLDivElement>) => {
+  const handleDragEnd = (e: DragEvent<HTMLDivElement>) => {
     if (e.currentTarget.classList) {
       e.currentTarget.classList.remove('opacity-50');
     }
@@ -43,7 +43,7 @@ export const useDragAndDrop = (): DragAndDropProps => {
     dragOverItem.current = null;
   };
 
-  const handleDragOver = (e: React.DragEvent<HTMLDivElement>, noteId: number) => {
+  const handleDragOver = (e: DragEvent<HTMLDivElement>, noteId: number) => {
     e.preventDefault();
     dragOverItem.current = noteId;
 
@@ -52,13 +52,13 @@ export const useDragAndDrop = (): DragAndDropProps => {
     }
   };
 
-  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+  const handleDragLeave = (e: DragEvent<HTMLDivElement>) => {
     if (e.currentTarget.classList) {
       e.currentTarget.classList.remove('border-primary');
     }
   };
 
-  const handleDrop = (e: React.DragEvent<HTMLDivElement>, noteId: number) => {
+  const handleDrop = (e: DragEvent<HTMLDivElement>, noteId: number) => {
     e.preventDefault();
 
     // ドロップされたタグのデータを取得

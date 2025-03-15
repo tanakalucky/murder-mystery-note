@@ -7,5 +7,8 @@ interface TimeState {
 
 export const useTimeStore = create<TimeState>((set) => ({
   times: [],
-  setTimes: (times: string[]) => set({ times }),
+  setTimes: (times: string[]) => {
+    const sortedTimes = [...times].sort();
+    set({ times: sortedTimes });
+  },
 }));

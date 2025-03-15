@@ -46,10 +46,10 @@ const Timeline = () => {
 
   if (dateGroups.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center h-full text-gray-500 p-8">
-        <Clock className="h-12 w-12 mb-2 opacity-20" />
+      <div className='flex flex-col items-center justify-center h-full text-gray-500 p-8'>
+        <Clock className='h-12 w-12 mb-2 opacity-20' />
         <p>タイムラインに表示するデータがありません。</p>
-        <p className="text-sm">メモに時間タグをドラッグしてください。</p>
+        <p className='text-sm'>メモに時間タグをドラッグしてください。</p>
       </div>
     );
   }
@@ -119,8 +119,8 @@ const Timeline = () => {
   };
 
   return (
-    <ScrollArea className="h-full pr-2">
-      <div className="space-y-3 p-2">
+    <ScrollArea className='h-full pr-2'>
+      <div className='space-y-3 p-2'>
         {dateGroups.map((dateGroup, dateIndex) => (
           <DateAccordion
             key={dateIndex}
@@ -153,23 +153,23 @@ const Timeline = () => {
                         return (
                           <div
                             key={charIndex}
-                            className="mb-2 last:mb-0 p-2 rounded-md border-l-3 border"
+                            className='mb-2 last:mb-0 p-2 rounded-md border-l-3 border'
                             style={{
                               borderLeftColor: charColor,
                               borderColor: getAlphaColor(charColor, 0.3),
                               backgroundColor: getAlphaColor(charColor, 0.1),
                             }}
                           >
-                            <div className="flex items-center mb-2">
-                              <User className="h-3 w-3 mr-1" style={{ color: charColor }} />
-                              <span className="text-xs font-medium text-foreground">{characterGroup.character}</span>
+                            <div className='flex items-center mb-2'>
+                              <User className='h-3 w-3 mr-1' style={{ color: charColor }} />
+                              <span className='text-xs font-medium text-foreground'>{characterGroup.character}</span>
                             </div>
 
-                            <div className="space-y-2 ml-3">
+                            <div className='space-y-2 ml-3'>
                               {characterGroup.notes.map((note, noteIndex) => (
-                                <Card key={noteIndex} className="bg-background shadow-sm py-0 border">
-                                  <CardContent className="p-2 overflow-hidden">
-                                    <div className="whitespace-pre-wrap text-foreground text-xs">{note.content}</div>
+                                <Card key={noteIndex} className='bg-background shadow-sm py-0 border'>
+                                  <CardContent className='p-2 overflow-hidden'>
+                                    <div className='whitespace-pre-wrap text-foreground text-xs'>{note.content}</div>
                                   </CardContent>
                                 </Card>
                               ))}

@@ -9,8 +9,8 @@ export const DeletePdfButton = () => {
   if (!currentPdf) return null;
 
   return (
-    <Button variant="outline" size="icon" onClick={() => removePdf(currentPdf.id)} className=" text-red-500">
-      <Trash2 className="h-4 w-4" />
+    <Button variant='outline' size='icon' onClick={() => removePdf(currentPdf.id)} className=' text-red-500'>
+      <Trash2 className='h-4 w-4' />
     </Button>
   );
 };
