@@ -23,7 +23,7 @@ const DragDropMysteryApp = () => {
         <div className='mb-2 flex justify-between items-center'>
           <h2 className='text-xl font-serif tracking-wider text-primary flex items-center'>
             <FileQuestion className='mr-2 h-5 w-5 text-destructive' />
-            ミステリーノート
+            マーダーミステリーノート
           </h2>
         </div>
         <Suspense fallback={<MemoSkeleton />}>
