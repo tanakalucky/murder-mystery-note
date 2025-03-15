@@ -1,5 +1,5 @@
 import { ChevronDown, ChevronRight } from 'lucide-react';
-import { ReactNode } from 'react';
+import { CSSProperties, ReactNode } from 'react';
 
 interface TimelineAccordionProps {
   isExpanded: boolean;
@@ -9,8 +9,8 @@ interface TimelineAccordionProps {
   className?: string;
   headerClassName?: string;
   contentClassName?: string;
-  style?: React.CSSProperties;
-  headerStyle?: React.CSSProperties;
+  style?: CSSProperties;
+  headerStyle?: CSSProperties;
 }
 
 export const TimelineAccordion = ({
@@ -32,7 +32,7 @@ export const TimelineAccordion = ({
         style={headerStyle}
       >
         {header}
-        {isExpanded ? <ChevronDown className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+        {isExpanded ? <ChevronDown className='h-4 w-4' /> : <ChevronRight className='h-4 w-4' />}
       </div>
       {isExpanded && <div className={contentClassName}>{children}</div>}
     </div>

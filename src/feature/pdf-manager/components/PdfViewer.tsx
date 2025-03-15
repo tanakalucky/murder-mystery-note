@@ -60,8 +60,8 @@ const PdfViewer = () => {
 
   if (!currentPdf)
     return (
-      <div className="flex flex-col items-center justify-center h-full text-gray-500 p-8">
-        <FileText className="h-12 w-12 mb-2 opacity-20" />
+      <div className='flex flex-col items-center justify-center h-full text-gray-500 p-8'>
+        <FileText className='h-12 w-12 mb-2 opacity-20' />
 
         <p>PDFが追加されていません</p>
       </div>
@@ -77,13 +77,13 @@ const PdfViewer = () => {
         {Array.from({ length: numPages || 0 }).map((_, index) => (
           <Page
             key={index}
-            className="flex items-center justify-center"
+            className='flex items-center justify-center'
             pageNumber={index + 1}
             renderTextLayer={true}
             renderAnnotationLayer={true}
             scale={currentPdf.scale}
             loading={<></>}
-            canvasBackground="#a9a9a9"
+            canvasBackground='#a9a9a9'
           />
         ))}
       </Document>

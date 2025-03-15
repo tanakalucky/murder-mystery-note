@@ -1,16 +1,16 @@
 import { Button } from '@/components/ui/button';
 import { usePdfStore } from '@/store/pdf-store';
 import { FileUp } from 'lucide-react';
-import { useRef } from 'react';
+import { ChangeEvent, ComponentProps, useRef } from 'react';
 
-type AddPdfButtonProps = React.ComponentProps<'button'>;
+type AddPdfButtonProps = ComponentProps<'button'>;
 
 const AddPdfButton = ({ ...props }: AddPdfButtonProps) => {
   const addPdf = usePdfStore((state) => state.addPdf);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileUpload = (event: ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (files && files.length > 0) {
       addPdf(files[0]);
@@ -23,16 +23,16 @@ const AddPdfButton = ({ ...props }: AddPdfButtonProps) => {
   return (
     <>
       <Button
-        size="icon"
-        variant="outline"
+        size='icon'
+        variant='outline'
         onClick={() => fileInputRef.current?.click()}
-        title="PDFファイルをアップロード"
+        title='PDFファイルをアップロード'
         {...props}
       >
-        <FileUp className="h-4 w-4" />
+        <FileUp className='h-4 w-4' />
       </Button>
 
-      <input type="file" accept=".pdf" ref={fileInputRef} onChange={handleFileUpload} className="hidden" />
+      <input type='file' accept='.pdf' ref={fileInputRef} onChange={handleFileUpload} className='hidden' />
     </>
   );
 };

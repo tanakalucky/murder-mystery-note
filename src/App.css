@@ -94,12 +94,17 @@ button:hover {
 
 /* マーダーミステリーらしいフォントスタイル */
 body {
-  font-family: 'Courier New', Courier, monospace;
+  font-family: "Courier New", Courier, monospace;
   letter-spacing: 0.5px;
 }
 
-h1, h2, h3, h4, h5, h6 {
-  font-family: 'Times New Roman', Times, serif;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Times New Roman", Times, serif;
   letter-spacing: 1px;
   text-align: left;
 }
@@ -111,7 +116,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .border-b::after {
-  content: '';
+  content: "";
   position: absolute;
   bottom: -2px;
   right: 10%;
@@ -174,7 +179,8 @@ h1, h2, h3, h4, h5, h6 {
   color: var(--foreground);
 }
 
-.text-gray-800, .text-gray-700 {
+.text-gray-800,
+.text-gray-700 {
   color: var(--foreground) !important; /* 古い紙のような色に変更 */
 }
 
@@ -195,7 +201,8 @@ h1, h2, h3, h4, h5, h6 {
   border-color: var(--primary) !important; /* 境界線をより目立つように */
 }
 
-textarea, .Textarea {
+textarea,
+.Textarea {
   background-color: var(--muted) !important;
   color: var(--primary-foreground) !important; /* 文字色をより明るく */
 }
@@ -272,7 +279,8 @@ button:hover {
 }
 
 /* すべてのテキスト入力を明るく */
-input, textarea {
+input,
+textarea {
   color: var(--primary-foreground) !important;
 }
 

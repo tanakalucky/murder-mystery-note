@@ -6,8 +6,8 @@ import { TimeTagManager } from './time-tag-manager/TimeTagManger';
 
 const TagManager = () => {
   return (
-    <div className="flex flex-col h-full">
-      <ScrollArea className="flex-1 max-h-[calc(100vh-12rem)]">
+    <div className='flex flex-col h-full'>
+      <ScrollArea className='flex-1 max-h-[calc(100vh-12rem)]'>
         <CharacterTagManager />
 
         <PlaceTagManager />

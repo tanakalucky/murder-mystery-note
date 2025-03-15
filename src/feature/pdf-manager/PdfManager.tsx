@@ -10,11 +10,11 @@ const PdfViewer = lazy(() => import('./components/PdfViewer'));
 
 const PdfManager = () => {
   return (
-    <div className="flex flex-col h-full">
-      <div className="flex justify-between items-center mb-4">
+    <div className='flex flex-col h-full'>
+      <div className='flex justify-between items-center mb-4'>
         <PdfSelect />
 
-        <div className="flex items-center gap-1">
+        <div className='flex items-center gap-1'>
           <AddPdfButton />
           <DeletePdfButton />
           <ZoomOutButton />

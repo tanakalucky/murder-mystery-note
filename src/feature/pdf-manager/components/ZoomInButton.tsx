@@ -9,8 +9,8 @@ export const ZoomInButton = () => {
   if (!currentPdf) return null;
 
   return (
-    <Button variant="outline" size="icon" onClick={zoomIn} disabled={currentPdf.scale >= ZOOM_MAX} title="拡大">
-      <ZoomIn className="h-4 w-4" />
+    <Button variant='outline' size='icon' onClick={zoomIn} disabled={currentPdf.scale >= ZOOM_MAX} title='拡大'>
+      <ZoomIn className='h-4 w-4' />
     </Button>
   );
 };

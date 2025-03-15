@@ -2,7 +2,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useDragAndDrop } from '@/hooks/use-drag-and-drop';
 import { useCharacterStore } from '@/store/character-store';
-import { useState } from 'react';
+import { KeyboardEvent, useState } from 'react';
 import { DraggableTag } from '../components/DraggableTag';
 import { TAG_TYPES } from '../types';
 import { useCharacterTag } from './hooks';
@@ -24,7 +24,7 @@ export const CharacterTagManager = () => {
     deleteTag,
   } = useCharacterTag();
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     // 日本語入力中はEnterキーでの送信を無効化
     if (e.key === 'Enter' && !e.shiftKey && !e.nativeEvent.isComposing) {
       e.preventDefault();
@@ -36,21 +36,21 @@ export const CharacterTagManager = () => {
   };
 
   return (
-    <div className="mb-4">
-      <h3 className="text-sm font-semibold mb-2">キャラクター</h3>
-      <div className="flex items-center gap-2 mb-2">
+    <div className='mb-4'>
+      <h3 className='text-sm font-semibold mb-2'>キャラクター</h3>
+      <div className='flex items-center gap-2 mb-2'>
         <Input
           value={newCharacterText}
           onChange={(e) => setNewCharacterText(e.target.value)}
-          placeholder="新しいキャラクターを追加"
-          className="flex-1 text-sm"
+          placeholder='新しいキャラクターを追加'
+          className='flex-1 text-sm'
         />
 
-        <Input type="color" value={newTagColor} onChange={(e) => setNewTagColor(e.target.value)} className="w-10" />
+        <Input type='color' value={newTagColor} onChange={(e) => setNewTagColor(e.target.value)} className='w-10' />
 
         <Button
-          variant="outline"
-          size="sm"
+          variant='outline'
+          size='sm'
           onClick={() => {
             if (newCharacterText.trim() === '') return;
             const newChar = {
@@ -65,39 +65,39 @@ export const CharacterTagManager = () => {
           追加
         </Button>
       </div>
-      <div className="grid grid-cols-3 gap-1.5">
+      <div className='grid grid-cols-3 gap-1.5'>
         {characters.map((char) => (
           <div
             key={char.id}
-            className="relative bg-card border rounded-md px-2 py-1 flex items-center gap-1 text-xs group"
+            className='relative bg-card border rounded-md px-2 py-1 flex items-center gap-1 text-xs group'
             style={{ borderLeftColor: char.color, borderLeftWidth: '4px' }}
           >
             {editingTagId === char.id ? (
-              <div className="flex items-center w-full gap-1">
+              <div className='flex items-center w-full gap-1'>
                 <Input
                   value={editTagText}
                   onChange={(e) => setEditTagText(e.target.value)}
-                  className="h-5 text-xs px-1 py-0 w-full"
+                  className='h-5 text-xs px-1 py-0 w-full'
                   autoFocus
                   onKeyDown={handleKeyDown}
                 />
                 <Input
-                  type="color"
+                  type='color'
                   value={editTagColor}
                   onChange={(e) => setEditTagColor(e.target.value)}
-                  className="w-5 h-5 p-0"
+                  className='w-5 h-5 p-0'
                   onClick={(e) => e.stopPropagation()}
                 />
-                <div className="flex ml-1">
+                <div className='flex ml-1'>
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
                       saveTag();
                     }}
-                    className="text-green-500 hover:text-green-700 p-0.5"
+                    className='text-green-500 hover:text-green-700 p-0.5'
                   >
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" fill="currentColor" />
+                    <svg width='12' height='12' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
+                      <path d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z' fill='currentColor' />
                     </svg>
                   </button>
                   <button
@@ -105,12 +105,12 @@ export const CharacterTagManager = () => {
                       e.stopPropagation();
                       setEditingTagId(null);
                     }}
-                    className="text-red-500 hover:text-red-700 p-0.5"
+                    className='text-red-500 hover:text-red-700 p-0.5'
                   >
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <svg width='12' height='12' viewBox='0 0 24 24' fill='none' xmlns='http://www.w3.org/2000/svg'>
                       <path
-                        d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z"
-                        fill="currentColor"
+                        d='M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41z'
+                        fill='currentColor'
                       />
                     </svg>
                   </button>
@@ -125,8 +125,8 @@ export const CharacterTagManager = () => {
                 onEditTag={() => startEditingTag(char.id, char.name, char.color)}
                 onDeleteTag={() => deleteTag(char.id)}
               >
-                <div className="w-2 h-2 rounded-full" style={{ backgroundColor: char.color }}></div>
-                <span className="truncate">{char.name}</span>
+                <div className='w-2 h-2 rounded-full' style={{ backgroundColor: char.color }}></div>
+                <span className='truncate'>{char.name}</span>
               </DraggableTag>
             )}
           </div>
