@@ -29,9 +29,9 @@ export const useDragAndDrop = (): DragAndDropProps => {
     dragItem.current = tag;
 
     if (e.currentTarget.classList) {
-      setTimeout(() => {
-        e.currentTarget.classList.add('opacity-50');
-      }, 0);
+      // setTimeout(() => {
+      e.currentTarget.classList.add('opacity-50');
+      // }, 0);
     }
   };
 
